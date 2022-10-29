@@ -1,80 +1,80 @@
-var BusBoy  = require('busboy'),
-    fs      = require('fs-extra'),
-    path    = require('path'),
-    os      = require('os'),
-    crypto  = require('crypto');
+const BusBoy = require('busboy')
+const fs = require('fs-extra')
+const path = require('path')
+const os = require('os')
+const crypto = require('crypto')
 
 // ### ghostBusboy
 // Process multipart file streams
-function ghostBusBoy(req, res, next) {
-    var busboy,
-        stream,
-        tmpDir;
+function ghostBusBoy (req, res, next) {
+  let busboy,
+    stream,
+    tmpDir
 
-    // busboy is only used for POST requests
-    if (req.method && !/post/i.test(req.method)) {
-        return next();
+  // busboy is only used for POST requests
+  if (req.method && !/post/i.test(req.method)) {
+    return next()
+  }
+
+  busboy = new BusBoy({ headers: req.headers })
+  tmpDir = os.tmpdir()
+
+  req.files = req.files || {}
+  req.body = req.body || {}
+
+  busboy.on('file', function onFile (fieldname, file, filename, encoding, mimetype) {
+    let filePath
+    let tmpFileName
+    const md5 = crypto.createHash('sha256')
+
+    // If the filename is invalid, skip the stream
+    if (!filename) {
+      return file.resume()
     }
 
-    busboy = new BusBoy({headers: req.headers});
-    tmpDir = os.tmpdir();
+    // Create an MD5 hash of original filename
+    md5.update(filename, 'utf8')
 
-    req.files = req.files || {};
-    req.body = req.body || {};
+    tmpFileName = (new Date()).getTime() + md5.digest('hex')
 
-    busboy.on('file', function onFile(fieldname, file, filename, encoding, mimetype) {
-        var filePath,
-            tmpFileName,
-            md5 = crypto.createHash('md5');
+    filePath = path.join(tmpDir, tmpFileName || 'temp.tmp')
 
-        // If the filename is invalid, skip the stream
-        if (!filename) {
-            return file.resume();
-        }
+    file.on('end', function end () {
+      req.files[fieldname] = {
+        type: mimetype,
+        encoding,
+        name: filename,
+        path: filePath
+      }
+    })
 
-        // Create an MD5 hash of original filename
-        md5.update(filename, 'utf8');
+    file.on('error', function onError (error) {
+      console.log('Error', 'Something went wrong uploading the file', error)
+    })
 
-        tmpFileName = (new Date()).getTime() + md5.digest('hex');
+    stream = fs.createWriteStream(filePath)
 
-        filePath = path.join(tmpDir, tmpFileName || 'temp.tmp');
+    stream.on('error', function onError (error) {
+      console.log('Error', 'Something went wrong uploading the file', error)
+    })
 
-        file.on('end', function end() {
-            req.files[fieldname] = {
-                type: mimetype,
-                encoding: encoding,
-                name: filename,
-                path: filePath
-            };
-        });
+    file.pipe(stream)
+  })
 
-        file.on('error', function onError(error) {
-            console.log('Error', 'Something went wrong uploading the file', error);
-        });
+  busboy.on('error', function onError (error) {
+    console.log('Error', 'Something went wrong parsing the form', error)
+    res.status(500).send({ code: 500, message: 'Could not parse upload completely.' })
+  })
 
-        stream = fs.createWriteStream(filePath);
+  busboy.on('field', function onField (fieldname, val) {
+    req.body[fieldname] = val
+  })
 
-        stream.on('error', function onError(error) {
-            console.log('Error', 'Something went wrong uploading the file', error);
-        });
+  busboy.on('finish', function onFinish () {
+    next()
+  })
 
-        file.pipe(stream);
-    });
-
-    busboy.on('error', function onError(error) {
-        console.log('Error', 'Something went wrong parsing the form', error);
-        res.status(500).send({code: 500, message: 'Could not parse upload completely.'});
-    });
-
-    busboy.on('field', function onField(fieldname, val) {
-        req.body[fieldname] = val;
-    });
-
-    busboy.on('finish', function onFinish() {
-        next();
-    });
-
-    req.pipe(busboy);
+  req.pipe(busboy)
 }
 
-module.exports = ghostBusBoy;
+module.exports = ghostBusBoy
