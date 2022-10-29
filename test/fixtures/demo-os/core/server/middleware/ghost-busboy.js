@@ -25,7 +25,7 @@ function ghostBusBoy(req, res, next) {
     busboy.on('file', function onFile(fieldname, file, filename, encoding, mimetype) {
         var filePath,
             tmpFileName,
-            md5 = crypto.createHash('md5');
+            md5 = crypto.createHash("sha256");
 
         // If the filename is invalid, skip the stream
         if (!filename) {

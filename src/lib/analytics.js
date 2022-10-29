@@ -50,7 +50,7 @@ function postAnalytics(data) {
     data.nodeVersion = process.version;
 
     const seed = uuid.v4();
-    const shasum = crypto.createHash('sha1');
+    const shasum = crypto.createHash("sha256");
     data.id = shasum.update(seed).digest('hex');
 
     const headers = {};

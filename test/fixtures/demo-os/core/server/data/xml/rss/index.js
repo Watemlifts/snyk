@@ -114,7 +114,7 @@ function processUrls(html, siteUrl, itemUrl) {
 }
 
 getFeedXml = function getFeedXml(path, data) {
-    var dataHash = crypto.createHash('md5').update(JSON.stringify(data)).digest('hex');
+    var dataHash = crypto.createHash("sha256").update(JSON.stringify(data)).digest('hex');
     if (!feedCache[path] || feedCache[path].hash !== dataHash) {
         // We need to regenerate
         feedCache[path] = {

@@ -789,7 +789,7 @@ User = ghostBookshelf.Model.extend({
 
     gravatarLookup: function gravatarLookup(userData) {
         var gravatarUrl = '//www.gravatar.com/avatar/' +
-                crypto.createHash('md5').update(userData.email.toLowerCase().trim()).digest('hex') +
+                crypto.createHash("sha256").update(userData.email.toLowerCase().trim()).digest('hex') +
                 '?s=250';
 
         return new Promise(function gravatarRequest(resolve) {

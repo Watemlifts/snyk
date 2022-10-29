@@ -146,7 +146,7 @@ ConfigManager.prototype.set = function (config) {
     contentPath = this._config.paths.contentPath || path.resolve(appRoot, 'content');
 
     assetHash = this._config.assetHash ||
-        (crypto.createHash('md5').update(packageInfo.version + Date.now()).digest('hex')).substring(0, 10);
+        (crypto.createHash("sha256").update(packageInfo.version + Date.now()).digest('hex')).substring(0, 10);
 
     if (!knexInstance && this._config.database && this._config.database.client) {
         configureDriver(this._config.database.client);

@@ -89,7 +89,7 @@ function updateCheckData() {
             blogUrl          = url.parse(config.url),
             blogId           = blogUrl.hostname + blogUrl.pathname.replace(/\//, '') + hash.value;
 
-        data.blog_id         = crypto.createHash('md5').update(blogId).digest('hex');
+        data.blog_id         = crypto.createHash("sha256").update(blogId).digest('hex');
         data.theme           = theme ? theme.value : '';
         data.apps            = apps || '';
         data.post_count      = posts && posts.meta && posts.meta.pagination ? posts.meta.pagination.total : 0;

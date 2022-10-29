@@ -36,8 +36,8 @@ describe('Migrations', function () {
                 });
             });
 
-            schemaHash = crypto.createHash('md5').update(JSON.stringify(tablesNoValidation)).digest('hex');
-            permissionsHash = crypto.createHash('md5').update(JSON.stringify(permissions)).digest('hex');
+            schemaHash = crypto.createHash("sha256").update(JSON.stringify(tablesNoValidation)).digest('hex');
+            permissionsHash = crypto.createHash("sha256").update(JSON.stringify(permissions)).digest('hex');
 
             // Test!
             defaultSettings.core.databaseVersion.defaultValue.should.eql(currentDbVersion);
