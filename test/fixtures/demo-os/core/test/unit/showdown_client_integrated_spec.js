@@ -207,11 +207,11 @@ describe('Showdown client side converter', function () {
             },
             {
                 input: '>http://google.co.uk',
-                output: /^<blockquote>\n  <p><a href="http:\/\/google.co.uk">http:\/\/google.co.uk<\/a><\/p>\n<\/blockquote>$/
+                output: /^<blockquote>\n {2}<p><a href="http:\/\/google.co.uk">http:\/\/google.co.uk<\/a><\/p>\n<\/blockquote>$/
             },
             {
                 input: '> http://google.co.uk',
-                output: /^<blockquote>\n  <p><a href="http:\/\/google.co.uk">http:\/\/google.co.uk<\/a><\/p>\n<\/blockquote>$/
+                output: /^<blockquote>\n {2}<p><a href="http:\/\/google.co.uk">http:\/\/google.co.uk<\/a><\/p>\n<\/blockquote>$/
             },
             {
                 input: '<>>> http://google.co.uk',
@@ -320,7 +320,7 @@ describe('Showdown client side converter', function () {
     it('should NOT escape underscore inside of code/pre blocks', function () {
         var testPhrase = {
                 input: '```\n_____\n```',
-                output: /^<pre><code>_____  \n<\/code><\/pre>$/
+                output: /^<pre><code>_____ {2}\n<\/code><\/pre>$/
             },
             processedMarkup;
 
@@ -332,7 +332,7 @@ describe('Showdown client side converter', function () {
         var testPhrases = [
             {
                 input: '```\nurl: http://google.co.uk\n```',
-                output: /^<pre><code>url: http:\/\/google.co.uk  \n<\/code><\/pre>$/
+                output: /^<pre><code>url: http:\/\/google.co.uk {2}\n<\/code><\/pre>$/
             },
             {
                 input: '`url: http://google.co.uk`',
@@ -491,7 +491,7 @@ describe('Showdown client side converter', function () {
         var testPhrases = [
             {
                 input: '<table class=\"test\">\n    <tr>\n        <td>Foo</td>\n    </tr>\n    <tr>\n        <td>Bar</td>\n    </tr>\n</table>',
-                output: /^<table class=\"test\">  \n    <tr>\n        <td>Foo<\/td>\n    <\/tr>\n    <tr>\n        <td>Bar<\/td>\n    <\/tr>\n<\/table>$/
+                output: /^<table class=\"test\"> {2}\n {4}<tr>\n {8}<td>Foo<\/td>\n {4}<\/tr>\n {4}<tr>\n {8}<td>Bar<\/td>\n {4}<\/tr>\n<\/table>$/
             },
             {
                 input: '<hr />',
@@ -499,7 +499,7 @@ describe('Showdown client side converter', function () {
             },
             {   // audio isn't counted as a block tag by showdown so gets wrapped in <p></p>
                 input: '<audio class=\"podcastplayer\" controls>\n    <source src=\"foobar.mp3\" type=\"audio/mp3\" preload=\"none\"></source>\n    <source src=\"foobar.off\" type=\"audio/ogg\" preload=\"none\"></source>\n</audio>',
-                output: /^<audio class=\"podcastplayer\" controls>  \n    <source src=\"foobar.mp3\" type=\"audio\/mp3\" preload=\"none\"><\/source>\n    <source src=\"foobar.off\" type=\"audio\/ogg\" preload=\"none\"><\/source>\n<\/audio>$/
+                output: /^<audio class=\"podcastplayer\" controls> {2}\n {4}<source src=\"foobar.mp3\" type=\"audio\/mp3\" preload=\"none\"><\/source>\n {4}<source src=\"foobar.off\" type=\"audio\/ogg\" preload=\"none\"><\/source>\n<\/audio>$/
             }
         ];
 
@@ -603,11 +603,11 @@ describe('Showdown client side converter', function () {
         var testPhrases = [
             {
                 input: 'Header\n==',
-                output: /^<h1 id="header">Header  <\/h1>$/
+                output: /^<h1 id="header">Header {2}<\/h1>$/
             },
             {
                 input: 'First Header\n==\nSecond Header\n==',
-                output: /^<h1 id="firstheader">First Header  <\/h1>\n\n<h1 id="secondheader">Second Header  <\/h1>$/
+                output: /^<h1 id="firstheader">First Header {2}<\/h1>\n\n<h1 id="secondheader">Second Header {2}<\/h1>$/
             }
         ];
 
