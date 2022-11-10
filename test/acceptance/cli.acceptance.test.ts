@@ -3222,7 +3222,7 @@ after('teardown', async (t) => {
   }
 });
 
-function chdirWorkspaces(subdir: string = '') {
+function chdirWorkspaces(subdir = '') {
   process.chdir(__dirname + '/workspaces' + (subdir ? '/' + subdir : ''));
 }
 
