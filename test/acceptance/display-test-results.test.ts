@@ -28,6 +28,6 @@ test('`test ruby-app` remediation displayed',  async (t) => {
   t.end();
 });
 
-function chdirWorkspaces(subdir: string = '') {
+function chdirWorkspaces(subdir = '') {
   process.chdir(__dirname + '/workspaces' + (subdir ? '/' + subdir : ''));
 }
