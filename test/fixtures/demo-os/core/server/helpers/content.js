@@ -19,9 +19,9 @@ content = function (options) {
         truncateOptions[key] = parseInt(truncateOptions[key], 10);
     });
 
-    if (truncateOptions.hasOwnProperty('words') || truncateOptions.hasOwnProperty('characters')) {
+    if (Object.prototype.hasOwnProperty.call(truncateOptions, 'words') || Object.prototype.hasOwnProperty.call(truncateOptions, 'characters')) {
         // Legacy function: {{content words="0"}} should return leading tags.
-        if (truncateOptions.hasOwnProperty('words') && truncateOptions.words === 0) {
+        if (Object.prototype.hasOwnProperty.call(truncateOptions, 'words') && truncateOptions.words === 0) {
             return new hbs.handlebars.SafeString(
                 downzero(this.html)
             );

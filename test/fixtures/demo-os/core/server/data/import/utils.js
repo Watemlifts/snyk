@@ -107,7 +107,7 @@ utils = {
 
         postTags = tableData.posts_tags;
         _.each(postTags, function (postTag) {
-            if (!postsWithTags.hasOwnProperty(postTag.post_id)) {
+            if (!Object.prototype.hasOwnProperty.call(postsWithTags, postTag.post_id)) {
                 postsWithTags[postTag.post_id] = [];
             }
             postsWithTags[postTag.post_id].push(postTag.tag_id);

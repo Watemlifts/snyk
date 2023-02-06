@@ -104,16 +104,16 @@ locationHeader = function locationHeader(req, result) {
         newObject;
 
     if (req.method === 'POST') {
-        if (result.hasOwnProperty('posts')) {
+        if (Object.prototype.hasOwnProperty.call(result, 'posts')) {
             newObject = result.posts[0];
             location = apiRoot + '/posts/' + newObject.id + '/?status=' + newObject.status;
-        } else if (result.hasOwnProperty('notifications')) {
+        } else if (Object.prototype.hasOwnProperty.call(result, 'notifications')) {
             newObject = result.notifications[0];
             location = apiRoot + '/notifications/' + newObject.id + '/';
-        } else if (result.hasOwnProperty('users')) {
+        } else if (Object.prototype.hasOwnProperty.call(result, 'users')) {
             newObject = result.users[0];
             location = apiRoot + '/users/' + newObject.id + '/';
-        } else if (result.hasOwnProperty('tags')) {
+        } else if (Object.prototype.hasOwnProperty.call(result, 'tags')) {
             newObject = result.tags[0];
             location = apiRoot + '/tags/' + newObject.id + '/';
         }

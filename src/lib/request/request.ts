@@ -61,7 +61,7 @@ export = function makeRequest(payload: Payload): Promise<{res: needle.NeedleResp
       }
 
       // prefer config timeout unless payload specified
-      if (!payload.hasOwnProperty('timeout')) {
+      if (!Object.prototype.hasOwnProperty.call(payload, 'timeout')) {
         payload.timeout = config.timeout * 1000; // s -> ms
       }
 

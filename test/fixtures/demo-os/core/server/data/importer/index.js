@@ -233,7 +233,7 @@ _.extend(ImportManager.prototype, {
             baseDir = self.getBaseDirectory(zipDirectory);
 
             _.each(self.handlers, function (handler) {
-                if (importData.hasOwnProperty(handler.type)) {
+                if (Object.prototype.hasOwnProperty.call(importData, handler.type)) {
                     // This limitation is here to reduce the complexity of the importer for now
                     return Promise.reject(new errors.UnsupportedMediaTypeError(
                         'Zip file contains multiple data formats. Please split up and import separately.'
@@ -325,7 +325,7 @@ _.extend(ImportManager.prototype, {
     doImport: function (importData) {
         var ops = [];
         _.each(this.importers, function (importer) {
-            if (importData.hasOwnProperty(importer.type)) {
+            if (Object.prototype.hasOwnProperty.call(importData, importer.type)) {
                 ops.push(function () {
                     return importer.doImport(importData[importer.type]);
                 });

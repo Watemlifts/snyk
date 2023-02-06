@@ -37,7 +37,7 @@ validateSchema = function validateSchema(tableName, model) {
         var message = '';
 
         // check nullable
-        if (model.hasOwnProperty(columnKey) && schema[tableName][columnKey].hasOwnProperty('nullable')
+        if (Object.prototype.hasOwnProperty.call(model, columnKey) && Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'nullable')
                 && schema[tableName][columnKey].nullable !== true) {
             if (validator.isNull(model[columnKey]) || validator.empty(model[columnKey])) {
                 message = 'Value in [' + tableName + '.' + columnKey + '] cannot be blank.';
@@ -48,7 +48,7 @@ validateSchema = function validateSchema(tableName, model) {
         // TODO: check if mandatory values should be enforced
         if (model[columnKey] !== null && model[columnKey] !== undefined) {
             // check length
-            if (schema[tableName][columnKey].hasOwnProperty('maxlength')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'maxlength')) {
                 if (!validator.isLength(model[columnKey], 0, schema[tableName][columnKey].maxlength)) {
                     message = 'Value in [' + tableName + '.' + columnKey + '] exceeds maximum length of '
                         + schema[tableName][columnKey].maxlength + ' characters.';
@@ -57,12 +57,12 @@ validateSchema = function validateSchema(tableName, model) {
             }
 
             // check validations objects
-            if (schema[tableName][columnKey].hasOwnProperty('validations')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'validations')) {
                 validationErrors = validationErrors.concat(validate(model[columnKey], columnKey, schema[tableName][columnKey].validations));
             }
 
             // check type
-            if (schema[tableName][columnKey].hasOwnProperty('type')) {
+            if (Object.prototype.hasOwnProperty.call(schema[tableName][columnKey], 'type')) {
                 if (schema[tableName][columnKey].type === 'integer' && !validator.isInt(model[columnKey])) {
                     message = 'Value in [' + tableName + '.' + columnKey + '] is not an integer.';
                     validationErrors.push(new errors.ValidationError(message, tableName + '.' + columnKey));
@@ -112,7 +112,7 @@ validateActiveTheme = function validateActiveTheme(themeName) {
     }
 
     return availableThemes.then(function then(themes) {
-        if (!themes.hasOwnProperty(themeName)) {
+        if (!Object.prototype.hasOwnProperty.call(themes, themeName)) {
             return Promise.reject(new errors.ValidationError(themeName + ' cannot be activated because it is not currently installed.', 'activeTheme'));
         }
     });

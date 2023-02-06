@@ -52,7 +52,7 @@ shortcuts = {
         var shortcut,
             startIndex = 0;
 
-        if (simpleShortcutSyntax.hasOwnProperty(type)) {
+        if (Object.prototype.hasOwnProperty.call(simpleShortcutSyntax, type)) {
             shortcut = simpleShortcutSyntax[type];
             // insert the markdown
             replacement.text = shortcut.regex.replace('|', selection.text);

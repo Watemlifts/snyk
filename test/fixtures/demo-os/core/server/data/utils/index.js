@@ -11,33 +11,33 @@ function addTableColumn(tablename, table, columnname) {
         columnSpec = schema[tablename][columnname];
 
     // creation distinguishes between text with fieldtype, string with maxlength and all others
-    if (columnSpec.type === 'text' && columnSpec.hasOwnProperty('fieldtype')) {
+    if (columnSpec.type === 'text' && Object.prototype.hasOwnProperty.call(columnSpec, 'fieldtype')) {
         column = table[columnSpec.type](columnname, columnSpec.fieldtype);
-    } else if (columnSpec.type === 'string' && columnSpec.hasOwnProperty('maxlength')) {
+    } else if (columnSpec.type === 'string' && Object.prototype.hasOwnProperty.call(columnSpec, 'maxlength')) {
         column = table[columnSpec.type](columnname, columnSpec.maxlength);
     } else {
         column = table[columnSpec.type](columnname);
     }
 
-    if (columnSpec.hasOwnProperty('nullable') && columnSpec.nullable === true) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'nullable') && columnSpec.nullable === true) {
         column.nullable();
     } else {
         column.notNullable();
     }
-    if (columnSpec.hasOwnProperty('primary') && columnSpec.primary === true) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'primary') && columnSpec.primary === true) {
         column.primary();
     }
-    if (columnSpec.hasOwnProperty('unique') && columnSpec.unique) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'unique') && columnSpec.unique) {
         column.unique();
     }
-    if (columnSpec.hasOwnProperty('unsigned') && columnSpec.unsigned) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'unsigned') && columnSpec.unsigned) {
         column.unsigned();
     }
-    if (columnSpec.hasOwnProperty('references')) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'references')) {
         // check if table exists?
         column.references(columnSpec.references);
     }
-    if (columnSpec.hasOwnProperty('defaultTo')) {
+    if (Object.prototype.hasOwnProperty.call(columnSpec, 'defaultTo')) {
         column.defaultTo(columnSpec.defaultTo);
     }
 }

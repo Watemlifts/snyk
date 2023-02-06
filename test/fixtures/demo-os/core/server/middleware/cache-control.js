@@ -17,7 +17,7 @@ cacheControl = function cacheControl(options) {
         },
         output;
 
-    if (_.isString(options) && profiles.hasOwnProperty(options)) {
+    if (_.isString(options) && Object.prototype.hasOwnProperty.call(profiles, options)) {
         output = profiles[options];
     }
 

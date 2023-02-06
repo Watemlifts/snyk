@@ -29,7 +29,7 @@ var _        = require('lodash'),
                 }
                 try {
                     jsonContainer = JSON.parse(data);
-                    if (jsonContainer.hasOwnProperty('name') && jsonContainer.hasOwnProperty('version')) {
+                    if (Object.prototype.hasOwnProperty.call(jsonContainer, 'name') && Object.prototype.hasOwnProperty.call(jsonContainer, 'version')) {
                         resolve(jsonContainer);
                     } else {
                         messages.errors.push({
@@ -112,7 +112,7 @@ var _        = require('lodash'),
             // for all contents of the dir, I'm interested in the ones that are directories and within /theme/
             if (typeof paths === 'object' && dir.indexOf('theme') !== -1) {
                 _.each(paths, function (path, index) {
-                    if (typeof path === 'object' && !path.hasOwnProperty('package.json') && index.indexOf('.') !== 0) {
+                    if (typeof path === 'object' && !Object.prototype.hasOwnProperty.call(path, 'package.json') && index.indexOf('.') !== 0) {
                         messages.warns.push({
                             message: 'Found a theme with no package.json file',
                             context: 'Theme name: ' + index,

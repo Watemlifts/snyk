@@ -42,7 +42,7 @@ themes = {
                             uuid: key
                         };
 
-                        if (availableThemes[key].hasOwnProperty('package.json')) {
+                        if (Object.prototype.hasOwnProperty.call(availableThemes[key], 'package.json')) {
                             item = _.merge(item, availableThemes[key]['package.json']);
                         }
 

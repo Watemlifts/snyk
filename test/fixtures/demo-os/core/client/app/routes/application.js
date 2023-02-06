@@ -159,7 +159,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
             errors.forEach(function (errorObj) {
                 notifications.showError(errorObj.message || errorObj);
 
-                if (errorObj.hasOwnProperty('el')) {
+                if (Object.prototype.hasOwnProperty.call(errorObj, 'el')) {
                     errorObj.el.addClass('input-error');
                 }
             });

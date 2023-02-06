@@ -126,7 +126,7 @@ filterPaths = function (paths, active) {
             item = {
                 name: key
             };
-            if (paths[key].hasOwnProperty('package.json')) {
+            if (Object.prototype.hasOwnProperty.call(paths[key], 'package.json')) {
                 item.package = paths[key]['package.json'];
             } else {
                 item.package = false;
@@ -149,7 +149,7 @@ filterPaths = function (paths, active) {
  */
 readSettingsResult = function (settingsModels) {
     var settings = _.reduce(settingsModels, function (memo, member) {
-            if (!memo.hasOwnProperty(member.attributes.key)) {
+            if (!Object.prototype.hasOwnProperty.call(memo, member.attributes.key)) {
                 memo[member.attributes.key] = member.attributes;
             }
 

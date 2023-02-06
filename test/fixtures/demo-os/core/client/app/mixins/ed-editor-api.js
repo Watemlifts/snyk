@@ -120,7 +120,7 @@ var EditorAPI = Ember.Mixin.create({
             $textarea.replaceSelectedText(replacement, cursorPosition);
         } else {
             $textarea.replaceSelectedText(replacement);
-            if (cursorPosition.hasOwnProperty('start')) {
+            if (Object.prototype.hasOwnProperty.call(cursorPosition, 'start')) {
                 $textarea.setSelection(cursorPosition.start, cursorPosition.end);
             } else {
                 $textarea.setSelection(cursorPosition, cursorPosition);

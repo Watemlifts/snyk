@@ -46,7 +46,7 @@ ConfigManager.prototype.getSocket = function () {
     permissions: '660'
   }
 
-  if (this._config.server.hasOwnProperty('socket')) {
+  if (Object.prototype.hasOwnProperty.call(this._config.server, 'socket')) {
     socketConfig = this._config.server.socket
 
     if (_.isString(socketConfig)) {
@@ -410,7 +410,7 @@ ConfigManager.prototype.displayDeprecated = function (item, properties, address)
 
   address.push(property)
 
-  if (item.hasOwnProperty(property)) {
+  if (Object.prototype.hasOwnProperty.call(item, property)) {
     if (properties.length) {
       return self.displayDeprecated(item[property], properties, address)
     }

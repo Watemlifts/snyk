@@ -7,7 +7,7 @@ var moment          = require('moment'),
     date;
 
 date = function (context, options) {
-    if (!options && context.hasOwnProperty('hash')) {
+    if (!options && Object.prototype.hasOwnProperty.call(context, 'hash')) {
         options = context;
         context = undefined;
 

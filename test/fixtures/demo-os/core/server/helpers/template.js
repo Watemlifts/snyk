@@ -34,9 +34,9 @@ templates.getThemeViewForPost = function (themePaths, post) {
         view = 'post';
 
     if (post.page) {
-        if (themePaths.hasOwnProperty(customPageView + '.hbs')) {
+        if (Object.prototype.hasOwnProperty.call(themePaths, customPageView + '.hbs')) {
             view = customPageView;
-        } else if (themePaths.hasOwnProperty('page.hbs')) {
+        } else if (Object.prototype.hasOwnProperty.call(themePaths, 'page.hbs')) {
             view = 'page';
         }
     }
@@ -56,9 +56,9 @@ templates.getThemeViewForChannel = function (themePaths, channelName, slug) {
     var customChannelView = channelName + '-' + slug,
         view = channelName;
 
-    if (themePaths.hasOwnProperty(customChannelView + '.hbs')) {
+    if (Object.prototype.hasOwnProperty.call(themePaths, customChannelView + '.hbs')) {
         view = customChannelView;
-    } else if (!themePaths.hasOwnProperty(channelName + '.hbs')) {
+    } else if (!Object.prototype.hasOwnProperty.call(themePaths, channelName + '.hbs')) {
         view = 'index';
     }
 

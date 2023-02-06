@@ -273,7 +273,7 @@ describe('API Utils', function () {
             prepareIncludeStub.calledOnce.should.be.true;
             prepareIncludeStub.calledWith(options.include, allowed).should.be.true;
 
-            actualResult.should.have.hasOwnProperty('include');
+            Object.prototype.hasOwnProperty.call(actualResult.should.have, 'include');
             actualResult.include.should.be.an.Array;
             actualResult.include.should.eql(expectedResult);
         });

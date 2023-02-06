@@ -68,7 +68,7 @@ foreach = function (context, options) {
             key;
 
         for (key in context) {
-            if (context.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(context, key)) {
                 // We're running the iterations one step out of sync so we can detect
                 // the last iteration without have to scan the object twice and create
                 // an itermediate keys array.

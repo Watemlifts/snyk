@@ -26,7 +26,7 @@ getPermalinkSetting = function getPermalinkSetting(model, attributes, options) {
     return ghostBookshelf.model('Settings').findOne({key: 'permalinks'}).then(function then(response) {
         if (response) {
             response = response.toJSON(options);
-            permalinkSetting = response.hasOwnProperty('value') ? response.value : '';
+            permalinkSetting = Object.prototype.hasOwnProperty.call(response, 'value') ? response.value : '';
         }
     });
 };

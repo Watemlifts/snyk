@@ -184,23 +184,23 @@ var db = {
     };
 
 function isPost(jsonData) {
-    return jsonData.hasOwnProperty('html') && jsonData.hasOwnProperty('markdown') &&
-           jsonData.hasOwnProperty('title') && jsonData.hasOwnProperty('slug');
+    return Object.prototype.hasOwnProperty.call(jsonData, 'html') && Object.prototype.hasOwnProperty.call(jsonData, 'markdown') &&
+           Object.prototype.hasOwnProperty.call(jsonData, 'title') && Object.prototype.hasOwnProperty.call(jsonData, 'slug');
 }
 
 function isTag(jsonData) {
-    return jsonData.hasOwnProperty('name') && jsonData.hasOwnProperty('slug') &&
-        jsonData.hasOwnProperty('description') && jsonData.hasOwnProperty('parent');
+    return Object.prototype.hasOwnProperty.call(jsonData, 'name') && Object.prototype.hasOwnProperty.call(jsonData, 'slug') &&
+        Object.prototype.hasOwnProperty.call(jsonData, 'description') && Object.prototype.hasOwnProperty.call(jsonData, 'parent');
 }
 
 function isUser(jsonData) {
-    return jsonData.hasOwnProperty('bio') && jsonData.hasOwnProperty('website') &&
-        jsonData.hasOwnProperty('status') && jsonData.hasOwnProperty('location');
+    return Object.prototype.hasOwnProperty.call(jsonData, 'bio') && Object.prototype.hasOwnProperty.call(jsonData, 'website') &&
+        Object.prototype.hasOwnProperty.call(jsonData, 'status') && Object.prototype.hasOwnProperty.call(jsonData, 'location');
 }
 
 function isNav(jsonData) {
-    return jsonData.hasOwnProperty('label') && jsonData.hasOwnProperty('url') &&
-        jsonData.hasOwnProperty('slug') && jsonData.hasOwnProperty('current');
+    return Object.prototype.hasOwnProperty.call(jsonData, 'label') && Object.prototype.hasOwnProperty.call(jsonData, 'url') &&
+        Object.prototype.hasOwnProperty.call(jsonData, 'slug') && Object.prototype.hasOwnProperty.call(jsonData, 'current');
 }
 
 module.exports.tables = db;

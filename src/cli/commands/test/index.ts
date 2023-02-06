@@ -231,7 +231,7 @@ function displayResult(res, options: Options & TestOptions) {
   const issuesText = res.licensesPolicy ? 'issues' : 'vulnerabilities';
   let pathOrDepsText = '';
 
-  if (res.hasOwnProperty('dependencyCount')) {
+  if (Object.prototype.hasOwnProperty.call(res, 'dependencyCount')) {
     pathOrDepsText += res.dependencyCount + ' dependencies';
   } else {
     pathOrDepsText += options.path;
