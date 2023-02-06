@@ -4,39 +4,39 @@
 // Ghost's JSON API is integral to the workings of Ghost, regardless of whether you want to access data internally,
 // from a theme, an app, or from an external app, you'll use the Ghost JSON API to do so.
 
-var _              = require('lodash'),
-    config         = require('../config'),
-    // Include Endpoints
-    configuration  = require('./configuration'),
-    db             = require('./db'),
-    mail           = require('./mail'),
-    notifications  = require('./notifications'),
-    posts          = require('./posts'),
-    roles          = require('./roles'),
-    settings       = require('./settings'),
-    tags           = require('./tags'),
-    themes         = require('./themes'),
-    users          = require('./users'),
-    slugs          = require('./slugs'),
-    authentication = require('./authentication'),
-    uploads        = require('./upload'),
-    dataExport     = require('../data/export'),
+const _ = require('lodash')
+const config = require('../config')
+// Include Endpoints
+const configuration = require('./configuration')
+const db = require('./db')
+const mail = require('./mail')
+const notifications = require('./notifications')
+const posts = require('./posts')
+const roles = require('./roles')
+const settings = require('./settings')
+const tags = require('./tags')
+const themes = require('./themes')
+const users = require('./users')
+const slugs = require('./slugs')
+const authentication = require('./authentication')
+const uploads = require('./upload')
+const dataExport = require('../data/export')
 
-    http,
-    addHeaders,
-    cacheInvalidationHeader,
-    locationHeader,
-    contentDispositionHeader,
-    init;
+let http
+let addHeaders
+let cacheInvalidationHeader
+let locationHeader
+let contentDispositionHeader
+let init
 
 /**
  * ### Init
  * Initialise the API - populate the settings cache
  * @return {Promise(Settings)} Resolves to Settings Collection
  */
-init = function init() {
-    return settings.updateSettingsCache();
-};
+init = function init () {
+  return settings.updateSettingsCache()
+}
 
 /**
  * ### Cache Invalidation Header
@@ -51,41 +51,41 @@ init = function init() {
  * @param {Object} result API method result
  * @return {String} Resolves to header string
  */
-cacheInvalidationHeader = function cacheInvalidationHeader(req, result) {
-    var parsedUrl = req._parsedUrl.pathname.replace(/^\/|\/$/g, '').split('/'),
-        method = req.method,
-        endpoint = parsedUrl[0],
-        cacheInvalidate,
-        jsonResult = result.toJSON ? result.toJSON() : result,
-        post,
-        hasStatusChanged,
-        wasDeleted,
-        wasPublishedUpdated;
+cacheInvalidationHeader = function cacheInvalidationHeader (req, result) {
+  const parsedUrl = req._parsedUrl.pathname.replace(/^\/|\/$/g, '').split('/')
+  const method = req.method
+  const endpoint = parsedUrl[0]
+  let cacheInvalidate
+  const jsonResult = result.toJSON ? result.toJSON() : result
+  let post
+  let hasStatusChanged
+  let wasDeleted
+  let wasPublishedUpdated
 
-    if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
-        if (endpoint === 'settings' || endpoint === 'users' || endpoint === 'db' || endpoint === 'tags') {
-            cacheInvalidate = '/*';
-        } else if (endpoint === 'posts') {
-            post = jsonResult.posts[0];
-            hasStatusChanged = post.statusChanged;
-            wasDeleted = method === 'DELETE';
-            // Invalidate cache when post was updated but not when post is draft
-            wasPublishedUpdated = method === 'PUT' && post.status === 'published';
+  if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
+    if (endpoint === 'settings' || endpoint === 'users' || endpoint === 'db' || endpoint === 'tags') {
+      cacheInvalidate = '/*'
+    } else if (endpoint === 'posts') {
+      post = jsonResult.posts[0]
+      hasStatusChanged = post.statusChanged
+      wasDeleted = method === 'DELETE'
+      // Invalidate cache when post was updated but not when post is draft
+      wasPublishedUpdated = method === 'PUT' && post.status === 'published'
 
-            // Remove the statusChanged value from the response
-            delete post.statusChanged;
+      // Remove the statusChanged value from the response
+      delete post.statusChanged
 
-            // Don't set x-cache-invalidate header for drafts
-            if (hasStatusChanged || wasDeleted || wasPublishedUpdated) {
-                cacheInvalidate = '/*';
-            } else {
-                cacheInvalidate = '/' + config.routeKeywords.preview + '/' + post.uuid + '/';
-            }
-        }
+      // Don't set x-cache-invalidate header for drafts
+      if (hasStatusChanged || wasDeleted || wasPublishedUpdated) {
+        cacheInvalidate = '/*'
+      } else {
+        cacheInvalidate = '/' + config.routeKeywords.preview + '/' + post.uuid + '/'
+      }
     }
+  }
 
-    return cacheInvalidate;
-};
+  return cacheInvalidate
+}
 
 /**
  * ### Location Header
@@ -98,29 +98,29 @@ cacheInvalidationHeader = function cacheInvalidationHeader(req, result) {
  * @param {Object} result API method result
  * @return {String} Resolves to header string
  */
-locationHeader = function locationHeader(req, result) {
-    var apiRoot = config.urlFor('api'),
-        location,
-        newObject;
+locationHeader = function locationHeader (req, result) {
+  const apiRoot = config.urlFor('api')
+  let location
+  let newObject
 
-    if (req.method === 'POST') {
-        if (Object.prototype.hasOwnProperty.call(result, 'posts')) {
-            newObject = result.posts[0];
-            location = apiRoot + '/posts/' + newObject.id + '/?status=' + newObject.status;
-        } else if (Object.prototype.hasOwnProperty.call(result, 'notifications')) {
-            newObject = result.notifications[0];
-            location = apiRoot + '/notifications/' + newObject.id + '/';
-        } else if (Object.prototype.hasOwnProperty.call(result, 'users')) {
-            newObject = result.users[0];
-            location = apiRoot + '/users/' + newObject.id + '/';
-        } else if (Object.prototype.hasOwnProperty.call(result, 'tags')) {
-            newObject = result.tags[0];
-            location = apiRoot + '/tags/' + newObject.id + '/';
-        }
+  if (req.method === 'POST') {
+    if (Object.prototype.hasOwnProperty.call(result, 'posts')) {
+      newObject = result.posts[0]
+      location = apiRoot + '/posts/' + newObject.id + '/?status=' + newObject.status
+    } else if (Object.prototype.hasOwnProperty.call(result, 'notifications')) {
+      newObject = result.notifications[0]
+      location = apiRoot + '/notifications/' + newObject.id + '/'
+    } else if (Object.prototype.hasOwnProperty.call(result, 'users')) {
+      newObject = result.users[0]
+      location = apiRoot + '/users/' + newObject.id + '/'
+    } else if (Object.prototype.hasOwnProperty.call(result, 'tags')) {
+      newObject = result.tags[0]
+      location = apiRoot + '/tags/' + newObject.id + '/'
     }
+  }
 
-    return location;
-};
+  return location
+}
 
 /**
  * ### Content Disposition Header
@@ -136,46 +136,46 @@ locationHeader = function locationHeader(req, result) {
  * @see http://tools.ietf.org/html/rfc598
  * @return {string}
  */
-contentDispositionHeader = function contentDispositionHeader() {
-    return dataExport.fileName().then(function then(filename) {
-        return 'Attachment; filename="' + filename + '"';
-    });
-};
+contentDispositionHeader = function contentDispositionHeader () {
+  return dataExport.fileName().then(function then (filename) {
+    return 'Attachment; filename="' + filename + '"'
+  })
+}
 
-addHeaders = function addHeaders(apiMethod, req, res, result) {
-    var cacheInvalidation,
-        location,
-        contentDisposition;
+addHeaders = function addHeaders (apiMethod, req, res, result) {
+  let cacheInvalidation,
+    location,
+    contentDisposition
 
-    cacheInvalidation = cacheInvalidationHeader(req, result);
-    if (cacheInvalidation) {
-        res.set({'X-Cache-Invalidate': cacheInvalidation});
+  cacheInvalidation = cacheInvalidationHeader(req, result)
+  if (cacheInvalidation) {
+    res.set({ 'X-Cache-Invalidate': cacheInvalidation })
+  }
+
+  if (req.method === 'POST') {
+    location = locationHeader(req, result)
+    if (location) {
+      res.set({ Location: location })
+      // The location header indicates that a new object was created.
+      // In this case the status code should be 201 Created
+      res.status(201)
     }
+  }
 
-    if (req.method === 'POST') {
-        location = locationHeader(req, result);
-        if (location) {
-            res.set({Location: location});
-            // The location header indicates that a new object was created.
-            // In this case the status code should be 201 Created
-            res.status(201);
+  if (apiMethod === db.exportContent) {
+    contentDisposition = contentDispositionHeader()
+      .then(function addContentDispositionHeader (header) {
+        // Add Content-Disposition Header
+        if (apiMethod === db.exportContent) {
+          res.set({
+            'Content-Disposition': header
+          })
         }
-    }
+      })
+  }
 
-    if (apiMethod === db.exportContent) {
-        contentDisposition = contentDispositionHeader()
-            .then(function addContentDispositionHeader(header) {
-                // Add Content-Disposition Header
-                if (apiMethod === db.exportContent) {
-                    res.set({
-                        'Content-Disposition': header
-                    });
-                }
-            });
-    }
-
-    return contentDisposition;
-};
+  return contentDisposition
+}
 
 /**
  * ### HTTP
@@ -187,58 +187,58 @@ addHeaders = function addHeaders(apiMethod, req, res, result) {
  * @param {Function} apiMethod API method to call
  * @return {Function} middleware format function to be called by the route when a matching request is made
  */
-http = function http(apiMethod) {
-    return function apiHandler(req, res, next) {
-        // We define 2 properties for using as arguments in API calls:
-        var object = req.body,
-            options = _.extend({}, req.files, req.query, req.params, {
-                context: {
-                    user: (req.user && req.user.id) ? req.user.id : null
-                }
-            });
+http = function http (apiMethod) {
+  return function apiHandler (req, res, next) {
+    // We define 2 properties for using as arguments in API calls:
+    let object = req.body
+    let options = _.extend({}, req.files, req.query, req.params, {
+      context: {
+        user: (req.user && req.user.id) ? req.user.id : null
+      }
+    })
 
-        // If this is a GET, or a DELETE, req.body should be null, so we only have options (route and query params)
-        // If this is a PUT, POST, or PATCH, req.body is an object
-        if (_.isEmpty(object)) {
-            object = options;
-            options = {};
-        }
+    // If this is a GET, or a DELETE, req.body should be null, so we only have options (route and query params)
+    // If this is a PUT, POST, or PATCH, req.body is an object
+    if (_.isEmpty(object)) {
+      object = options
+      options = {}
+    }
 
-        return apiMethod(object, options).tap(function onSuccess(response) {
-            // Add X-Cache-Invalidate, Location, and Content-Disposition headers
-            return addHeaders(apiMethod, req, res, (response || {}));
-        }).then(function then(response) {
-            // Send a properly formatting HTTP response containing the data with correct headers
-            res.json(response || {});
-        }).catch(function onAPIError(error) {
-            // To be handled by the API middleware
-            next(error);
-        });
-    };
-};
+    return apiMethod(object, options).tap(function onSuccess (response) {
+      // Add X-Cache-Invalidate, Location, and Content-Disposition headers
+      return addHeaders(apiMethod, req, res, (response || {}))
+    }).then(function then (response) {
+      // Send a properly formatting HTTP response containing the data with correct headers
+      res.json(response || {})
+    }).catch(function onAPIError (error) {
+      // To be handled by the API middleware
+      next(error)
+    })
+  }
+}
 
 /**
  * ## Public API
  */
 module.exports = {
-    // Extras
-    init: init,
-    http: http,
-    // API Endpoints
-    configuration: configuration,
-    db: db,
-    mail: mail,
-    notifications: notifications,
-    posts: posts,
-    roles: roles,
-    settings: settings,
-    tags: tags,
-    themes: themes,
-    users: users,
-    slugs: slugs,
-    authentication: authentication,
-    uploads: uploads
-};
+  // Extras
+  init,
+  http,
+  // API Endpoints
+  configuration,
+  db,
+  mail,
+  notifications,
+  posts,
+  roles,
+  settings,
+  tags,
+  themes,
+  users,
+  slugs,
+  authentication,
+  uploads
+}
 
 /**
  * ## API Methods

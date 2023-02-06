@@ -6,31 +6,31 @@
 //
 // Allows each app to declare its own default caching rules
 
-var _   = require('lodash'),
-    cacheControl;
+const _ = require('lodash')
+let cacheControl
 
-cacheControl = function cacheControl(options) {
-    /*jslint unparam:true*/
-    var profiles = {
-            public: 'public, max-age=0',
-            private: 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
-        },
-        output;
+cacheControl = function cacheControl (options) {
+  /* jslint unparam:true */
+  const profiles = {
+    public: 'public, max-age=0',
+    private: 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
+  }
+  let output
 
-    if (_.isString(options) && Object.prototype.hasOwnProperty.call(profiles, options)) {
-        output = profiles[options];
+  if (_.isString(options) && Object.prototype.hasOwnProperty.call(profiles, options)) {
+    output = profiles[options]
+  }
+
+  return function cacheControlHeaders (req, res, next) {
+    if (output) {
+      if (res.isPrivateBlog) {
+        res.set({ 'Cache-Control': profiles.private })
+      } else {
+        res.set({ 'Cache-Control': output })
+      }
     }
+    next()
+  }
+}
 
-    return function cacheControlHeaders(req, res, next) {
-        if (output) {
-            if (res.isPrivateBlog) {
-                res.set({'Cache-Control': profiles['private']});
-            } else {
-                res.set({'Cache-Control': output});
-            }
-        }
-        next();
-    };
-};
-
-module.exports = cacheControl;
+module.exports = cacheControl
