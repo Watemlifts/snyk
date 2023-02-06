@@ -1,26 +1,26 @@
-var templates     = {},
-    hbs           = require('express-hbs'),
-    errors        = require('../errors');
+const templates = {}
+const hbs = require('express-hbs')
+const errors = require('../errors')
 
 // ## Template utils
 
 // Execute a template helper
 // All template helpers are register as partial view.
 templates.execute = function (name, context, options) {
-    var partial = hbs.handlebars.partials[name];
+  const partial = hbs.handlebars.partials[name]
 
-    if (partial === undefined) {
-        errors.logAndThrowError('Template ' + name + ' not found.');
-        return;
-    }
+  if (partial === undefined) {
+    errors.logAndThrowError('Template ' + name + ' not found.')
+    return
+  }
 
-    // If the partial view is not compiled, it compiles and saves in handlebars
-    if (typeof partial === 'string') {
-        hbs.registerPartial(partial);
-    }
+  // If the partial view is not compiled, it compiles and saves in handlebars
+  if (typeof partial === 'string') {
+    hbs.registerPartial(partial)
+  }
 
-    return new hbs.handlebars.SafeString(partial(context, options));
-};
+  return new hbs.handlebars.SafeString(partial(context, options))
+}
 
 // Given a theme object and a post object this will return
 // which theme template page should be used.
@@ -30,19 +30,19 @@ templates.execute = function (name, context, options) {
 // If given a static post object and a custom page template
 // exits it will return that page.
 templates.getThemeViewForPost = function (themePaths, post) {
-    var customPageView = 'page-' + post.slug,
-        view = 'post';
+  const customPageView = 'page-' + post.slug
+  let view = 'post'
 
-    if (post.page) {
-        if (themePaths.hasOwnProperty(customPageView + '.hbs')) {
-            view = customPageView;
-        } else if (themePaths.hasOwnProperty('page.hbs')) {
-            view = 'page';
-        }
+  if (post.page) {
+    if (Object.prototype.hasOwnProperty.call(themePaths, customPageView + '.hbs')) {
+      view = customPageView
+    } else if (Object.prototype.hasOwnProperty.call(themePaths, 'page.hbs')) {
+      view = 'page'
     }
+  }
 
-    return view;
-};
+  return view
+}
 
 // Given a theme object and a slug this will return
 // which theme template page should be used.
@@ -53,16 +53,16 @@ templates.getThemeViewForPost = function (themePaths, post) {
 // If given a slug and a custom template
 // exits it will return that view.
 templates.getThemeViewForChannel = function (themePaths, channelName, slug) {
-    var customChannelView = channelName + '-' + slug,
-        view = channelName;
+  const customChannelView = channelName + '-' + slug
+  let view = channelName
 
-    if (themePaths.hasOwnProperty(customChannelView + '.hbs')) {
-        view = customChannelView;
-    } else if (!themePaths.hasOwnProperty(channelName + '.hbs')) {
-        view = 'index';
-    }
+  if (Object.prototype.hasOwnProperty.call(themePaths, customChannelView + '.hbs')) {
+    view = customChannelView
+  } else if (!Object.prototype.hasOwnProperty.call(themePaths, channelName + '.hbs')) {
+    view = 'index'
+  }
 
-    return view;
-};
+  return view
+}
 
-module.exports = templates;
+module.exports = templates

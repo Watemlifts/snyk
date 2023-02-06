@@ -112,7 +112,7 @@ function updateActiveTheme (req, res, next) {
     // Check if the theme changed
     if (activeTheme.value !== blogApp.get('activeTheme')) {
       // Change theme
-      if (!config.paths.availableThemes.hasOwnProperty(activeTheme.value)) {
+      if (!Object.prototype.hasOwnProperty.call(config.paths.availableThemes, activeTheme.value)) {
         if (!res.isAdmin) {
           // Throw an error if the theme is not available, but not on the admin UI
           return errors.throwError('The currently active theme ' + activeTheme.value + ' is missing.')
