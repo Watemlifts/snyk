@@ -59,7 +59,7 @@ utils = {
         string = unidecode(string);
 
         // Replace URL reserved chars: `:/?#[]!$&()*+,;=` as well as `\%<>|^~£"`
-        string = string.replace(/(\s|\.|@|:|\/|\?|#|\[|\]|!|\$|&|\(|\)|\*|\+|,|;|=|\\|%|<|>|\||\^|~|"|–|—)/g, '-')
+        string = string.replace(/(\s|\.|@|:|\/|\?|#|\[|\]|!|\$|&|\(|\)|\*|\+|,|;|=|\\|%|<|>|\||\^|~|"|–|—)/gu, '-')
             // Remove apostrophes
             .replace(/'/g, '')
             // Convert 2 or more dashes into a single dash
