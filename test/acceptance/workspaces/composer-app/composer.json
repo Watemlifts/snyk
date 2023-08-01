@@ -5,7 +5,7 @@
     "php" : ">=5.3.2",
     "symfony/symfony": "2.3.1",
     "yiisoft/yii": "1.1.14",
-    "zendframework/zendframework": "2.1.0",
+    "zendframework/zendframework": "2.5.3",
     "aws/aws-sdk-php": "3.0.0",
     "doctrine/common": "2.5.0"
   }
